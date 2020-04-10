@@ -18,9 +18,9 @@ func main() {
 	}
 }
 
-// Test results:
-// 	make test: 1.2s ~ 1.3s
-// 	make bench: 46s ~ 47s
+// Test Results
+//	make test: 1.2s ~ 1.3s
+//	make bench:	46s ~ 48s
 func MergeSort(src []int64) {
 	mergeSort(src, len(src))
 }
@@ -44,12 +44,14 @@ func mergePass(arr, tmpArr []int64, n, length int) {
 	}
 	wg.Wait()
 	if i+length < n {
+		wg.Add(1)
 		merge(arr, tmpArr, i, i+length, n-1)
 	} else {
 		for j := i; j < n; j++ {
 			tmpArr[j] = arr[j]
 		}
 	}
+	wg.Wait()
 }
 
 func merge(arr, tmpArr []int64, l, r, re int) {
@@ -75,4 +77,5 @@ func merge(arr, tmpArr []int64, l, r, re int) {
 		tmp++
 		r++
 	}
+	defer wg.Done()
 }
