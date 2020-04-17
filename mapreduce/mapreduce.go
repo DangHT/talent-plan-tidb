@@ -127,7 +127,7 @@ func (c *MRCluster) worker() {
 				for i := 0; i < t.nMap; i++ {
 					fileName := reduceName(t.dataDir, t.jobName, i, t.taskNumber)
 					if exist(fileName) {
-						_, obs := OpenFileAndBuf(fileName)
+						f, obs := OpenFileAndBuf(fileName)
 						dec := json.NewDecoder(obs)
 						for {
 							var kv KeyValue
@@ -136,6 +136,7 @@ func (c *MRCluster) worker() {
 							}
 							kva = append(kva, kv)
 						}
+						SafeClose(f, nil)
 					}
 				}
 				if len(kva) > 0 {
